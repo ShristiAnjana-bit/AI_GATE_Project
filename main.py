@@ -19,27 +19,31 @@ while True:
     
     # 4. PROMPT LOGIC: Decide whether to provide a quiz or an explanation
     if user_topic.lower() == 'quiz':
-        # Instruction for a random GATE Multiple Choice Question
-        prompt = "Provide one challenging MCQ for GATE CS with 4 options. Do not give the answer yet."
-        completions = client.chat.completions.create(
-            model = "llama-3.3-70b-versatile",
-            messages=[{"role":"user","content":prompt}]
-        )
-        question_text = completions.choices[0].message.content
-        print("\n"+question_text)
+       try: 
+            # Instruction for a random GATE Multiple Choice Question
+            prompt = "Provide one challenging MCQ for GATE CS with 4 options. Do not give the answer yet."
+            completions = client.chat.completions.create(
+                model = "llama-3.3-70b-versatile",
+                messages=[{"role":"user","content":prompt}]
+            )
+            question_text = completions.choices[0].message.content
+            print("\n"+question_text)
 
-        #step B: Pause and wait for you to type the answer
-        user_answer = input("\n Your Answer(A/B/C/D):").strip().upper()
+            #step B: Pause and wait for you to type the answer
+            user_answer = input("\n Your Answer(A/B/C/D):").strip().upper()
 
-        #step c: Send your answer back to the Professor for checking
-        feedback_prompt =f"The question was:{question_text}.The student answered:{user_answer}. Is it correct? If wrong,tell the correct option and explain."
-        feedback_result = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[{"role":"user","content":feedback_prompt}],
-        )
-        #this prints the final verdict
-        print("\n---PROFESSOR'S FEEDBACK---")
-        print(feedback_result.choices[0].message.content)
+            #step c: Send your answer back to the Professor for checking
+            feedback_prompt =f"The question was:{question_text}.The student answered:{user_answer}. Is it correct? If wrong,tell the correct option and explain."
+            feedback_result = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[{"role":"user","content":feedback_prompt}]
+            )
+            #this prints the final verdict
+            print("\n---PROFESSOR'S FEEDBACK---")
+            print(feedback_result.choices[0].message.content)
+       except Exception as e:
+            print(f"\n⚠️ERROR:I couldn't reach the GATE Professor Please check your internet or API Key.") 
+            print(f"Technical detail:{e}")  #this help you debug without crashing out
     else:
         # Instruction for a beginner-friendly topic summary
         prompt = f"Explain {user_topic} in 3 bullet points for a 6th semester engineering student."
