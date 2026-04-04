@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from groq import Groq
+from colorama import Fore, Back, Style, init
 
 # 1. INITIALIZATION: Load environment variables and set up the AI client
 load_dotenv()
@@ -27,10 +28,10 @@ while True:
                 messages=[{"role":"user","content":prompt}]
             )
             question_text = completions.choices[0].message.content
-            print("\n"+question_text)
+            print(Fore.CYAN + "\n"+question_text)
 
             #step B: Pause and wait for you to type the answer
-            user_answer = input("\n Your Answer(A/B/C/D):").strip().upper()
+            user_answer = input(Fore.CYAN + "\n Your Answer(A/B/C/D):").strip().upper()
 
             #step c: Send your answer back to the Professor for checking
             feedback_prompt =f"The question was:{question_text}.The student answered:{user_answer}. Is it correct? If wrong,tell the correct option and explain."
@@ -39,8 +40,8 @@ while True:
                 messages=[{"role":"user","content":feedback_prompt}]
             )
             #this prints the final verdict
-            print("\n---PROFESSOR'S FEEDBACK---")
-            print(feedback_result.choices[0].message.content)
+            print(Fore.GREEN + "\n---PROFESSOR'S FEEDBACK---")
+            print(Fore.WHITE+feedback_result.choices[0].message.content)
        except Exception as e:
             print(f"\n⚠️ERROR:I couldn't reach the GATE Professor Please check your internet or API Key.") 
             print(f"Technical detail:{e}")  #this help you debug without crashing out
