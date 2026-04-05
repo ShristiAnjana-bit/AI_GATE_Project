@@ -7,8 +7,14 @@ from dotenv import load_dotenv
 from groq import Groq
 from fpdf import FPDF
 
-load_dotenv()
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+# Updated for Cloud Deployment
+api_key = st.secrets.get("GROQ_API_KEY") or os.getenv("GROQ_API_KEY")
+
+if not api_key:
+    st.error("API Key not found! Check Streamlit Secrets.")
+    st.stop()
+
+client = Groq(api_key=api_key)
 
 st.set_page_config(page_title="GATE AI Professor Pro", layout="wide")
 
